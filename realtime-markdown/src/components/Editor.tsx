@@ -5,6 +5,8 @@ import remarkGfm from "remark-gfm";
 import { Layout, Menu, theme, Typography } from "antd";
 import { Input } from "antd";
 import { Dispatch, SetStateAction } from "react";
+import { PoweroffOutlined } from "@ant-design/icons";
+import { Button, Space } from "antd";
 
 const { TextArea } = Input;
 
@@ -37,15 +39,37 @@ const Editor: React.FC<Props> = (props) => {
     content: () => componentRef.current,
   });
 
+  const [loadings, setLoadings] = useState<boolean[]>([]);
+
+  const enterLoading = (index: number) => {
+    setLoadings((prevLoadings) => {
+      const newLoadings = [...prevLoadings];
+      newLoadings[index] = true;
+      return newLoadings;
+    });
+
+    setTimeout(() => {
+      setLoadings((prevLoadings) => {
+        const newLoadings = [...prevLoadings];
+        newLoadings[index] = false;
+        return newLoadings;
+      });
+    }, 6000);
+  };
+
   return (
     <>
       <Content style={{ margin: "24px 16px 0" }}>
         <div
-          style={{
-            padding: 24,
-            minHeight: 335,
-            background: colorBgContainer,
-          }}
+          style={
+            props.darkMode
+              ? {
+                  padding: 24,
+                  minHeight: 335,
+                  background: "gray",
+                }
+              : { padding: 24, minHeight: 335, background: colorBgContainer }
+          }
         >
           <TextArea
             showCount
@@ -56,7 +80,7 @@ const Editor: React.FC<Props> = (props) => {
                 ? {
                     height: 335,
                     resize: "none",
-                    backgroundColor: "black",
+                    backgroundColor: "gray",
                     color: "#fff",
                   }
                 : { height: 335, resize: "none" }
@@ -73,7 +97,7 @@ const Editor: React.FC<Props> = (props) => {
               ? {
                   padding: 24,
                   minHeight: 335,
-                  background: "black",
+                  background: "gray",
                 }
               : { padding: 24, minHeight: 335, background: colorBgContainer }
           }
@@ -86,9 +110,29 @@ const Editor: React.FC<Props> = (props) => {
       <div
         style={{ display: "flex", justifyContent: "center", marginTop: "10px" }}
       >
-        <button style={{ width: "400px" }} onClick={handlePrint}>
+        {/* <button
+          style={{ width: "400px", marginBottom: "9px" }}
+          onClick={() => {
+            handlePrint();
+          }}
+        >
           Print MarkDown to PDF!
-        </button>
+        </button> */}
+        <Button
+          style={{
+            width: "150px",
+            marginTop: "-4px",
+            fontWeight: "bold",
+          }}
+          type="primary"
+          loading={loadings[0]}
+          onClick={() => {
+            enterLoading(0);
+            handlePrint();
+          }}
+        >
+          Print to PDF
+        </Button>
       </div>
     </>
   );

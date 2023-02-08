@@ -62,7 +62,7 @@ const NavBar: React.FC<Props> = (props) => {
             style={{
               marginTop: "7px",
             }}
-            theme={props.darkMode ? "light" : "dark"}
+            theme="dark"
             mode="inline"
             defaultSelectedKeys={["1"]}
             items={props.arr.map((icon, index) => ({
@@ -72,9 +72,17 @@ const NavBar: React.FC<Props> = (props) => {
             }))}
           />
         </Sider>
-        <Layout>
-          <Header style={{ padding: 0, background: colorBgContainer }}>
-            <Tooltip title="dark mode">
+        <Layout style={props.darkMode ? { background: "#2c3644" } : {}}>
+          <Header
+            style={
+              props.darkMode
+                ? {
+                    padding: 0,
+                  }
+                : { padding: 0, background: colorBgContainer }
+            }
+          >
+            <Tooltip title="Dark Mode">
               <Button
                 style={{
                   marginLeft: "30px",
@@ -86,18 +94,35 @@ const NavBar: React.FC<Props> = (props) => {
               />
             </Tooltip>
             <Title
-              style={{
-                textAlign: "center",
-                marginTop: "-54px",
-                fontFamily: "Montserrat",
-                fontWeight: "bold",
-              }}
+              style={
+                props.darkMode
+                  ? {
+                      textAlign: "center",
+                      marginTop: "-54px",
+                      fontFamily: "Montserrat",
+                      fontWeight: "bold",
+                      color: "white",
+                    }
+                  : {
+                      textAlign: "center",
+                      marginTop: "-54px",
+                      fontFamily: "Montserrat",
+                      fontWeight: "bold",
+                      color: "black",
+                    }
+              }
             >
               RealTime MarkDown
             </Title>
           </Header>
           <Editor darkMode={props.darkMode} setDarkMode={props.setDarkMode} />
-          <Footer style={{ textAlign: "center" }}>
+          <Footer
+            style={
+              props.darkMode
+                ? { textAlign: "center", color: "white", background: "#2c3644" }
+                : { textAlign: "center" }
+            }
+          >
             Realtime Markdown ©2023 Created by lgorvin
           </Footer>
         </Layout>
