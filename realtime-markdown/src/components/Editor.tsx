@@ -1,11 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
+import { useReactToPrint } from "react-to-print";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
-import {
-  UploadOutlined,
-  UserOutlined,
-  VideoCameraOutlined,
-} from "@ant-design/icons";
 import { Layout, Menu, theme, Typography } from "antd";
 import { Input } from "antd";
 
@@ -21,7 +17,7 @@ const Editor: React.FC = () => {
   } = theme.useToken();
 
   const [text, setText] = useState(
-    "## **Welcome to Realtime Markdown** \n Start typing above and see your markdown converted in real time" as string
+    "## **Welcome to Realtime Markdown** \n Start typing above and see your markdown converted in real time \n # Things to come \n - ~~Save to PDF~~" as string
   );
 
   const onChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -30,87 +26,51 @@ const Editor: React.FC = () => {
     console.log(text);
   };
 
-  const handleKeyPress = () => {};
+  const componentRef = useRef(null);
+  const handlePrint = useReactToPrint({
+    content: () => componentRef.current,
+  });
 
   return (
-    <Layout>
-      <Sider
-        breakpoint="lg"
-        collapsedWidth="0"
-        onBreakpoint={(broken) => {
-          console.log(broken);
-        }}
-        onCollapse={(collapsed, type) => {
-          console.log(collapsed, type);
-        }}
+    <>
+      <Content style={{ margin: "24px 16px 0" }}>
+        <div
+          style={{
+            padding: 24,
+            minHeight: 335,
+            background: colorBgContainer,
+          }}
+        >
+          <TextArea
+            showCount
+            maxLength={500}
+            style={{ height: 335, resize: "none" }}
+            onChange={onChange}
+            placeholder="Enter your markdown"
+          />
+        </div>
+      </Content>
+      <Content ref={componentRef} style={{ margin: "24px 16px 0" }}>
+        <div
+          style={{
+            padding: 24,
+            minHeight: 335,
+            background: colorBgContainer,
+          }}
+        >
+          {text.split("\n").map((e) => (
+            <ReactMarkdown remarkPlugins={[remarkGfm]}>{e}</ReactMarkdown>
+          ))}
+        </div>
+      </Content>
+      <div
+        style={{ display: "flex", justifyContent: "center", marginTop: "10px" }}
       >
-        <div className="logo" />
-        <Menu
-          theme="dark"
-          mode="inline"
-          defaultSelectedKeys={["1"]}
-          items={[
-            UserOutlined,
-            VideoCameraOutlined,
-            UploadOutlined,
-            UserOutlined,
-          ].map((icon, index) => ({
-            key: String(index + 1),
-            icon: React.createElement(icon),
-            label: `Markdown ${index + 1}`,
-          }))}
-        />
-      </Sider>
-      <Layout>
-        <Header style={{ padding: 0, background: colorBgContainer }}>
-          <Title
-            style={{
-              textAlign: "center",
-              marginTop: "8px",
-              fontFamily: "Montserrat",
-              fontWeight: "bold",
-            }}
-          >
-            RealTime MarkDown
-          </Title>
-        </Header>
-
-        <Content style={{ margin: "24px 16px 0" }}>
-          <div
-            style={{
-              padding: 24,
-              minHeight: 335,
-              background: colorBgContainer,
-            }}
-          >
-            <TextArea
-              showCount
-              maxLength={500}
-              style={{ height: 335, resize: "none" }}
-              onChange={onChange}
-              placeholder="Enter your markdown"
-            />
-          </div>
-        </Content>
-        <Content style={{ margin: "24px 16px 0" }}>
-          <div
-            style={{
-              padding: 24,
-              minHeight: 335,
-              background: colorBgContainer,
-            }}
-          >
-            {text.split("\n").map((e) => (
-              <ReactMarkdown remarkPlugins={[remarkGfm]}>{e}</ReactMarkdown>
-            ))}
-          </div>
-        </Content>
-
-        <Footer style={{ textAlign: "center" }}>
-          Realtime Markdown ©2023 Created by lgorvin
-        </Footer>
-      </Layout>
-    </Layout>
+        <button style={{ width: "400px" }} onClick={handlePrint}>
+          Print MarkDown to PDF!
+        </button>
+      </div>
+    </>
   );
 };
 

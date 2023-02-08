@@ -5,7 +5,5 @@ import "./index.css";
 import "antd/dist/reset.css";
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>
+  <App />
 );

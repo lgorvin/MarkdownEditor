@@ -1,14 +1,19 @@
-import { useState } from "react";
 import reactLogo from "./assets/react.svg";
 import Editor from "./components/Editor";
+import React, { useState } from "react";
+import { Routes, Route } from "react-router";
+import { BrowserRouter } from "react-router-dom";
+import NavBar from "./components/NavBar";
+import { FormOutlined } from "@ant-design/icons";
 
 function App() {
-  const [count, setCount] = useState(0);
-
+  const [arr, setArr] = useState([FormOutlined] as any[]);
   return (
-    <div>
-      <Editor />
-    </div>
+    <BrowserRouter>
+      <Routes>
+        <Route path="*" element={<NavBar arr={arr} setArr={setArr} />} />
+      </Routes>
+    </BrowserRouter>
   );
 }
 
