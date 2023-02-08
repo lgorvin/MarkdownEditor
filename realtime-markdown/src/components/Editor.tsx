@@ -4,6 +4,7 @@ import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { Layout, Menu, theme, Typography } from "antd";
 import { Input } from "antd";
+import { Dispatch, SetStateAction } from "react";
 
 const { TextArea } = Input;
 
@@ -11,7 +12,12 @@ const { Header, Content, Footer, Sider } = Layout;
 
 const { Title } = Typography;
 
-const Editor: React.FC = () => {
+type Props = {
+  darkMode: boolean;
+  setDarkMode: Dispatch<SetStateAction<boolean>>;
+};
+
+const Editor: React.FC<Props> = (props) => {
   const {
     token: { colorBgContainer },
   } = theme.useToken();
@@ -44,7 +50,17 @@ const Editor: React.FC = () => {
           <TextArea
             showCount
             maxLength={500}
-            style={{ height: 335, resize: "none" }}
+            bordered={false}
+            style={
+              props.darkMode
+                ? {
+                    height: 335,
+                    resize: "none",
+                    backgroundColor: "black",
+                    color: "#fff",
+                  }
+                : { height: 335, resize: "none" }
+            }
             onChange={onChange}
             placeholder="Enter your markdown"
           />
@@ -52,11 +68,15 @@ const Editor: React.FC = () => {
       </Content>
       <Content ref={componentRef} style={{ margin: "24px 16px 0" }}>
         <div
-          style={{
-            padding: 24,
-            minHeight: 335,
-            background: colorBgContainer,
-          }}
+          style={
+            props.darkMode
+              ? {
+                  padding: 24,
+                  minHeight: 335,
+                  background: "black",
+                }
+              : { padding: 24, minHeight: 335, background: colorBgContainer }
+          }
         >
           {text.split("\n").map((e) => (
             <ReactMarkdown remarkPlugins={[remarkGfm]}>{e}</ReactMarkdown>
